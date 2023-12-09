@@ -1,12 +1,15 @@
 import { Request, Response } from 'express'
-import { StudentServices } from './student.servies'
+import { StudentServices } from './student.services'
+import studentValidationSchema from './student.validation'
 
 const createStudent = async (req: Request, res: Response) => {
   try {
     //1. get data from client body
     const { student: studentData } = req.body
+    // 2. parse data into validation
+    const parseData = studentValidationSchema.parse(studentData)
     //   2. will call service function to send this data in DB
-    const result = await StudentServices.createStudentIntoDB(studentData)
+    const result = await StudentServices.createStudentIntoDB(parseData)
     console.log(result)
     //3. res send
     res.status(200).send({
