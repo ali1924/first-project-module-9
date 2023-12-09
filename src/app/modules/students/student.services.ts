@@ -1,10 +1,20 @@
-import { Student } from './student.interface'
+import { TStudent } from './student.interface'
 import { StudentModel } from './student.model'
 
-const createStudentIntoDB = async (student: Student) => {
-  //1. call model.create function and pass student
-  const result = await StudentModel.create(student)
-  //   2. return result
+const createStudentIntoDB = async (studentData: TStudent) => {
+  // //1. call model.create function and pass student
+  // const result = await StudentModel.create(student)
+  //built-in static method
+  // //   2. return result
+  // return result
+
+  // instance method
+  const student = new StudentModel(studentData)
+  if (await student.isUserExists(studentData.id)) {
+    throw new Error('User already exists')
+  }
+  const result = await student.save()
+
   return result
 }
 //getAll students
