@@ -35,6 +35,9 @@ const localGuardianValidationSchema = z.object({
 
 const studentValidationSchema = z.object({
   id: z.string(),
+  password: z
+    .string()
+    .max(20, { message: 'Must be 5 or less characters long' }),
   name: userNameValidationSchema,
   email: z.string({ required_error: 'Email is required' }),
   gender: z.enum(['male', 'female', 'other'], {
