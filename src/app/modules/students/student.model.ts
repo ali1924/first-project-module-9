@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose'
 import {
   StudentMethods,
   StudentModel_I,
+  StudentModel_S,
   TGuardian,
   TLocalGuardian,
   TStudent,
@@ -27,7 +28,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   contactNo: { type: String, required: true },
 })
 
-const studentSchema = new Schema<TStudent, StudentModel_I, StudentMethods>({
+const studentSchema = new Schema<TStudent, StudentModel_S>({
   id: { type: String },
   name: userNameSchema,
   email: { type: String, required: true },
@@ -43,6 +44,13 @@ const studentSchema = new Schema<TStudent, StudentModel_I, StudentMethods>({
   profileImage: { type: String },
   isActive: ['active', 'inActive'],
 })
+//custom static method
+studentSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await StudentModel.findOne({ id })
+  return existingUser
+}
+export const StudentModel = model<TStudent, StudentModel_S>('Student', studentSchema)
+/*custom instance model 
 
 studentSchema.methods.isUserExists = async function (id: string) {
   const existingUser = await StudentModel.findOne({ id })
@@ -52,4 +60,4 @@ studentSchema.methods.isUserExists = async function (id: string) {
 export const StudentModel = model<TStudent, StudentModel_I>(
   'Student',
   studentSchema,
-)
+)*/
