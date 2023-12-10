@@ -8,7 +8,7 @@ const createStudentIntoDB = async (studentData: TStudent) => {
   // //   2. return result
   // return result
   //static method
-  
+
   if (await StudentModel.isUserExists(studentData.id)) {
     throw new Error('User already exists')
   }
@@ -41,8 +41,16 @@ const getSingleStudentFromDB = async (id: string) => {
   return result
 }
 
+const deleteStudentFromDB = async (id: string) => {
+  //1. update student using id and isDeleted field
+
+  const result = await StudentModel.updateOne({ id }, { isDeleted: true })
+  return result
+}
+
 export const StudentServices = {
   createStudentIntoDB,
   getAllStudentsFromDB,
   getSingleStudentFromDB,
+  deleteStudentFromDB,
 }

@@ -61,6 +61,7 @@ const studentValidationSchema = z.object({
   isActive: z.enum(['active', 'inActive'], {
     required_error: 'isActive is required',
   }),
+  isDeleted: z.boolean().default(false),
 })
 
 export default studentValidationSchema

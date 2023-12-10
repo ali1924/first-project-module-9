@@ -46,19 +46,30 @@ const studentSchema = new Schema<TStudent, StudentModel_S>({
   localGuardian: localGuardianSchema,
   profileImage: { type: String },
   isActive: ['active', 'inActive'],
+  isDeleted: { type: Boolean, default: false },
 })
 
 //pre save middleware/hooks
-studentSchema.pre('save',async function (next) {
-  console.log(this, 'Pre hook: We will save data............!!')
-  //1. hashing password and save into DB
-  const user = this
-  user.password =await bcrypt.hash(user.password, Number(config.bcrypt_salt_rounds))
+studentSchema.pre('save', async function (next) {
+  // console.log(this, 'Pre hook:Wi will save data.................!!!')
+  const user = this //doc
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  )
   next()
 })
+
 //post save middleware/hooks
-studentSchema.pre('save', function () {
-  console.log(this, 'Post hook: We  saved data.....!!!!')
+studentSchema.post('save', function (doc, next) {
+  doc.password = ''
+  // console.log(this, 'Post hook: We  saved data.....!!!!')
+  next()
+})
+
+//Query middleware/hooks
+studentSchema.pre('find', function (next) {
+  console.log(this)
 })
 
 //custom static method
