@@ -36,14 +36,14 @@ const getAllStudentsFromDB = async () => {
 const getSingleStudentFromDB = async (id: string) => {
   //1.find single student using id from model.findOne(id)
   //   const result = await StudentModel.findOne({ _id: id })
-  const result = await StudentModel.findOne({ id })
+  // const result = await StudentModel.findOne({ id })
+  const result = await StudentModel.aggregate([{ $match: { id: id } }])
   //   2. return result
   return result
 }
 
 const deleteStudentFromDB = async (id: string) => {
   //1. update student using id and isDeleted field
-
   const result = await StudentModel.updateOne({ id }, { isDeleted: true })
   return result
 }

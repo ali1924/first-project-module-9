@@ -67,9 +67,20 @@ studentSchema.post('save', function (doc, next) {
   next()
 })
 
-//Query middleware/hooks
+//Query middleware/hooks (find all)
 studentSchema.pre('find', function (next) {
-  console.log(this)
+  // console.log(this)
+  this.find({ isDeleted: { $ne: true } })
+
+  next()
+})
+
+studentSchema.pre('aggregate', function (next) {
+  // [ { '$match': { id: '1' } } ]
+  console.log(this.pipeline())
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } })
+
+  next()
 })
 
 //custom static method
