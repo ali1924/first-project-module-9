@@ -30,25 +30,38 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   contactNo: { type: String, required: true },
 })
 
-const studentSchema = new Schema<TStudent, StudentModel_S>({
-  id: { type: String },
-  password: { type: String },
-  name: userNameSchema,
-  email: { type: String, required: true },
-  gender: ['male', 'female'],
-  dateOfBirth: { type: String },
-  contactNo: { type: String, required: true },
-  emergencyContactNo: { type: String, required: true },
-  presentAddress: { type: String, required: true },
-  permanentAddress: { type: String, required: true },
-  bloodGroup: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-  guardian: guardianSchema,
-  localGuardian: localGuardianSchema,
-  profileImage: { type: String },
-  isActive: ['active', 'inActive'],
-  isDeleted: { type: Boolean, default: false },
-})
+const studentSchema = new Schema<TStudent, StudentModel_S>(
+  {
+    id: { type: String },
+    password: { type: String },
+    name: userNameSchema,
+    email: { type: String, required: true },
+    gender: ['male', 'female'],
+    dateOfBirth: { type: String },
+    contactNo: { type: String, required: true },
+    emergencyContactNo: { type: String, required: true },
+    presentAddress: { type: String, required: true },
+    permanentAddress: { type: String, required: true },
+    bloodGroup: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+    guardian: guardianSchema,
+    localGuardian: localGuardianSchema,
+    profileImage: { type: String },
+    isActive: ['active', 'inActive'],
+    isDeleted: { type: Boolean, default: false },
+  },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+  },
+)
 
+//virtual
+studentSchema.virtual('fullName').get(function () {
+  return `${
+    this.name.firstName + ' ' + this.name.middleName + ' ' + this.name.lastName
+  }`
+})
 //pre save middleware/hooks
 studentSchema.pre('save', async function (next) {
   // console.log(this, 'Pre hook:Wi will save data.................!!!')
